@@ -1,0 +1,1966 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ケアサービスアプリ 操作マニュアル</title>
+<style>
+/* ==============================
+   CSS Reset & Base
+   ============================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --pink: #E6A5A5;
+  --pink-light: #f0c4c4;
+  --pink-dark: #d48a8a;
+  --coral: #F4A286;
+  --coral-light: #f8c0ab;
+  --cream: #FAF7F2;
+  --cream-dark: #f0ece4;
+  --text-dark: #3a2e2e;
+  --text-mid: #5a4a4a;
+  --text-light: #8a7a7a;
+  --white: #ffffff;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html, body {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  background: var(--cream);
+  font-family: "游明朝", "Yu Mincho", "Hiragino Mincho ProN", "ヒラギノ明朝 ProN", "MS PMincho", serif;
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==============================
+   Slide Container
+   ============================== */
+.slides-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 60px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition), visibility var(--transition), transform var(--transition);
+  transform: translateY(12px);
+  overflow: hidden;
+}
+
+.slide.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* ==============================
+   Navigation
+   ============================== */
+.nav-controls {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 1000;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 10px 28px;
+  border-radius: 40px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+}
+
+.nav-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: var(--pink);
+  color: var(--white);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.nav-btn:hover {
+  background: var(--pink-dark);
+  transform: scale(1.08);
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
+}
+
+.nav-btn:disabled {
+  background: #d4c8c8;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.slide-counter {
+  font-size: 15px;
+  color: var(--text-mid);
+  min-width: 70px;
+  text-align: center;
+  letter-spacing: 1px;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--pink), var(--coral));
+  transition: width 0.5s ease;
+  z-index: 1001;
+}
+
+/* ==============================
+   Phone Mockup
+   ============================== */
+.phone-mockup {
+  position: relative;
+  width: 240px;
+  min-width: 240px;
+  height: 490px;
+  background: #1a1a1a;
+  border-radius: 36px;
+  padding: 12px;
+  box-shadow:
+    0 0 0 2px #2a2a2a,
+    0 8px 40px rgba(0,0,0,0.25),
+    inset 0 0 0 1px rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.phone-mockup::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 22px;
+  background: #1a1a1a;
+  border-radius: 0 0 14px 14px;
+  z-index: 2;
+}
+
+.phone-mockup::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: #2a2a2a;
+  border-radius: 50%;
+  z-index: 3;
+}
+
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 26px;
+  overflow: hidden;
+  background: var(--white);
+}
+
+.phone-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+/* Smaller phone for dual display */
+.phone-mockup.phone-sm {
+  width: 190px;
+  min-width: 190px;
+  height: 390px;
+  border-radius: 30px;
+  padding: 10px;
+}
+
+.phone-sm .phone-screen {
+  border-radius: 22px;
+}
+
+.phone-sm::before {
+  width: 60px;
+  height: 18px;
+  top: 8px;
+  border-radius: 0 0 10px 10px;
+}
+
+.phone-sm::after {
+  top: 11px;
+  width: 6px;
+  height: 6px;
+}
+
+/* ==============================
+   Content Layouts
+   ============================== */
+.slide-content {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  max-width: 1100px;
+  width: 100%;
+}
+
+.slide-content.centered {
+  flex-direction: column;
+  text-align: center;
+  gap: 24px;
+}
+
+.slide-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.slide-text h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.slide-text h3 {
+  font-size: 20px;
+  color: var(--pink-dark);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.slide-text p {
+  font-size: 17px;
+  line-height: 1.85;
+  color: var(--text-mid);
+  margin-bottom: 14px;
+}
+
+.slide-number-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--pink), var(--coral));
+  color: var(--white);
+  width: 38px;
+  height: 38px;
+  line-height: 38px;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+/* Steps / List */
+.steps {
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 44px;
+  margin-bottom: 16px;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--text-mid);
+}
+
+.steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 30px;
+  height: 30px;
+  background: var(--pink);
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.steps li strong {
+  color: var(--text-dark);
+}
+
+/* Info cards */
+.info-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+  border-left: 4px solid var(--pink);
+}
+
+.info-card.coral {
+  border-left-color: var(--coral);
+}
+
+.info-card h4 {
+  font-size: 16px;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+
+.info-card p {
+  font-size: 15px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+/* Tip box */
+.tip-box {
+  background: linear-gradient(135deg, rgba(230,165,165,0.1), rgba(244,162,134,0.1));
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin-top: 16px;
+  font-size: 15px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  border: 1px solid rgba(230,165,165,0.2);
+}
+
+.tip-box::before {
+  content: '※ ';
+  font-weight: 700;
+  color: var(--pink-dark);
+}
+
+/* Important note highlight */
+.important-note {
+  background: rgba(230,165,165,0.15);
+  border: 2px solid var(--pink);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin-top: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark);
+  line-height: 1.7;
+}
+
+.important-note::before {
+  content: '※ 重要 ';
+  color: var(--pink-dark);
+  font-weight: 800;
+}
+
+/* ==============================
+   Cover Slide
+   ============================== */
+.cover-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, var(--cream) 0%, #fdf0ec 40%, #f9e4df 100%);
+  z-index: -1;
+}
+
+.cover-bg::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  right: -120px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(230,165,165,0.2) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.cover-bg::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(244,162,134,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.cover-heart {
+  font-size: 52px;
+  margin-bottom: 16px;
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.12); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.08); }
+  60% { transform: scale(1); }
+}
+
+.cover-title {
+  font-size: 44px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--pink-dark), var(--coral));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+  letter-spacing: 2px;
+  line-height: 1.3;
+}
+
+.cover-subtitle {
+  font-size: 22px;
+  color: var(--text-mid);
+  margin-bottom: 28px;
+  font-weight: 400;
+  letter-spacing: 3px;
+}
+
+.cover-tagline {
+  font-size: 17px;
+  color: var(--pink-dark);
+  font-style: italic;
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+
+.cover-divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--pink), var(--coral));
+  margin: 20px auto;
+  border-radius: 2px;
+}
+
+/* ==============================
+   TOC Slide
+   ============================== */
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 40px;
+  max-width: 900px;
+  width: 100%;
+}
+
+.toc-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.toc-item:hover {
+  background: rgba(230,165,165,0.08);
+}
+
+.toc-num {
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  background: var(--pink);
+  color: var(--white);
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.toc-label {
+  font-size: 14px;
+  color: var(--text-mid);
+  flex: 1;
+}
+
+.toc-page {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-light);
+  font-variant-numeric: tabular-nums;
+}
+
+.toc-section {
+  grid-column: 1 / -1;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--pink-dark);
+  padding: 6px 14px 2px;
+  margin-top: 4px;
+  border-bottom: 1px solid rgba(230,165,165,0.3);
+}
+
+/* ==============================
+   Section Divider Slide
+   ============================== */
+.section-divider-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--cream) 0%, rgba(230,165,165,0.08) 50%, rgba(244,162,134,0.06) 100%);
+  z-index: -1;
+}
+
+.section-divider-num {
+  font-size: 80px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--pink), var(--coral));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.section-divider-title {
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+}
+
+.section-divider-sub {
+  font-size: 18px;
+  color: var(--text-mid);
+  letter-spacing: 1px;
+}
+
+/* ==============================
+   Dual Phone Layout
+   ============================== */
+.dual-phones {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.phone-label {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--text-mid);
+  font-weight: 500;
+}
+
+.arrow-between {
+  display: flex;
+  align-items: center;
+  font-size: 32px;
+  color: var(--pink);
+  padding-top: 180px;
+}
+
+/* ==============================
+   Service Color Table
+   ============================== */
+.service-table {
+  width: 100%;
+  max-width: 800px;
+  border-collapse: separate;
+  border-spacing: 0 5px;
+}
+
+.service-table th {
+  text-align: left;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--text-light);
+  font-weight: 500;
+  border-bottom: 1px solid #e0d8d0;
+}
+
+.service-table td {
+  padding: 8px 14px;
+  font-size: 15px;
+  background: var(--white);
+  vertical-align: middle;
+}
+
+.service-table tr td:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.service-table tr td:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.service-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 6px;
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ==============================
+   Q&A Slide
+   ============================== */
+.qa-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  max-width: 960px;
+  width: 100%;
+}
+
+.qa-card {
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.qa-card .q {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pink-dark);
+  margin-bottom: 6px;
+  display: flex;
+  gap: 6px;
+}
+
+.qa-card .a {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.65;
+  padding-left: 24px;
+}
+
+/* ==============================
+   Workflow Steps
+   ============================== */
+.workflow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 700px;
+  width: 100%;
+}
+
+.workflow-step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--white);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  transition: transform 0.2s;
+}
+
+.workflow-step:hover {
+  transform: translateX(4px);
+}
+
+.workflow-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--pink), var(--coral));
+  color: var(--white);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.workflow-text {
+  flex: 1;
+}
+
+.workflow-text .wf-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 1px;
+}
+
+.workflow-text .wf-desc {
+  font-size: 13px;
+  color: var(--text-mid);
+}
+
+/* ==============================
+   Back Cover
+   ============================== */
+.back-cover-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, #f9e4df 0%, var(--cream) 50%, #fdf0ec 100%);
+  z-index: -1;
+}
+
+.back-logo {
+  font-size: 20px;
+  color: var(--text-light);
+  letter-spacing: 4px;
+  margin-top: 20px;
+}
+
+.back-app {
+  font-size: 15px;
+  color: var(--text-light);
+  margin-top: 8px;
+}
+
+/* ==============================
+   Contact Cards
+   ============================== */
+.contact-cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 800px;
+}
+
+.contact-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  box-shadow: var(--shadow);
+  flex: 1;
+  min-width: 220px;
+  text-align: center;
+}
+
+.contact-card .cc-icon {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.contact-card h4 {
+  font-size: 17px;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+
+.contact-card p {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.7;
+}
+
+/* ==============================
+   Annotations / Callouts on screenshots
+   ============================== */
+.callout-list {
+  list-style: none;
+  margin-top: 12px;
+}
+
+.callout-list li {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-mid);
+}
+
+.callout-list li::before {
+  content: '\25CF';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  color: var(--pink);
+  font-size: 12px;
+}
+
+.callout-list li strong {
+  color: var(--text-dark);
+}
+
+/* Section header decoration */
+.section-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+
+.section-header .section-sub {
+  font-size: 16px;
+  color: var(--text-light);
+}
+
+.section-header .header-line {
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--pink), var(--coral));
+  margin: 12px auto 0;
+  border-radius: 3px;
+}
+
+/* Tab illustration */
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.tab-item {
+  padding: 8px 16px;
+  border-radius: 8px 8px 0 0;
+  font-size: 13px;
+  color: var(--text-light);
+  background: var(--cream-dark);
+  cursor: default;
+}
+
+.tab-item.active-tab {
+  background: var(--pink);
+  color: var(--white);
+  font-weight: 600;
+}
+
+/* URL badge */
+.url-badge {
+  display: inline-block;
+  background: var(--white);
+  border: 1px solid #e0d8d0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 15px;
+  color: var(--coral);
+  letter-spacing: 0.3px;
+  margin: 8px 0 14px;
+  word-break: break-all;
+}
+
+/* Two-column text */
+.two-col-text {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 12px;
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.status-approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-returned {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Credential display */
+.credential-box {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px 36px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  margin: 10px 0;
+}
+
+.credential-box .cred-label {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+
+.credential-box .cred-value {
+  font-size: 36px;
+  font-weight: 800;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  color: var(--text-dark);
+  letter-spacing: 3px;
+  margin-bottom: 14px;
+}
+
+.credential-box .cred-value.smaller {
+  font-size: 28px;
+}
+
+/* Progress overview for onboarding */
+.progress-overview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  max-width: 800px;
+}
+
+.progress-step-card {
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  text-align: center;
+  min-width: 100px;
+  flex: 1;
+  max-width: 140px;
+}
+
+.progress-step-card .psc-num {
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  background: linear-gradient(135deg, var(--pink), var(--coral));
+  color: var(--white);
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 auto 6px;
+}
+
+.progress-step-card .psc-label {
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+
+/* Button style references */
+.btn-ref {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+  margin: 0 2px;
+  vertical-align: middle;
+}
+
+.btn-blue { background: #3B82F6; }
+.btn-green { background: #22C55E; }
+.btn-pink { background: var(--pink); }
+
+/* Compact layout for more content slides */
+.slide-text.compact h2 { font-size: 28px; margin-bottom: 6px; }
+.slide-text.compact h3 { font-size: 18px; margin-bottom: 14px; }
+.slide-text.compact p { font-size: 15px; margin-bottom: 10px; }
+.slide-text.compact .steps li { font-size: 15px; margin-bottom: 12px; }
+.slide-text.compact .callout-list li { font-size: 14px; margin-bottom: 8px; }
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .slide {
+    padding: 30px 24px;
+  }
+  .slide-content {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .phone-mockup {
+    width: 180px;
+    min-width: 180px;
+    height: 370px;
+  }
+  .phone-mockup.phone-sm {
+    width: 150px;
+    min-width: 150px;
+    height: 310px;
+  }
+  .cover-title {
+    font-size: 32px;
+  }
+  .toc-grid {
+    grid-template-columns: 1fr;
+  }
+  .qa-grid {
+    grid-template-columns: 1fr;
+  }
+  .two-col-text {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .slide {
+    padding: 20px 16px;
+    padding-bottom: 72px;
+  }
+  .slide-title {
+    font-size: 1.2rem !important;
+  }
+  .section-title, h2 {
+    font-size: 1.05rem !important;
+  }
+  /* Single phone mockup: large and centered */
+  .phone-mockup {
+    width: 200px !important;
+    max-height: 400px !important;
+  }
+  .phone-mockup img {
+    max-height: 360px !important;
+  }
+  /* Dual phone: stack vertically, hide second phone, show only first larger */
+  .dual-phone {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  .dual-phone .phone-mockup {
+    width: 180px !important;
+    max-height: 340px !important;
+  }
+  .dual-phone .phone-mockup img {
+    max-height: 300px !important;
+  }
+  /* slide-content: stack vertically on mobile */
+  .slide-content {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+    font-size: 0.82rem !important;
+    overflow-y: auto !important;
+    max-height: calc(100vh - 100px) !important;
+  }
+  .slide-content .slide-text {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .slide-content .slide-image {
+    max-width: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  .content-area {
+    font-size: 0.82rem !important;
+    overflow-y: auto !important;
+    max-height: calc(100vh - 120px) !important;
+  }
+  .callout-list li, .steps li, ul li, ol li {
+    font-size: 0.8rem !important;
+    margin-bottom: 3px !important;
+  }
+  .tip-box, .info-card, .important-note {
+    padding: 8px 12px !important;
+    font-size: 0.78rem !important;
+  }
+  .badge {
+    font-size: 0.7rem !important;
+    padding: 2px 8px !important;
+  }
+  .nav-controls {
+    padding: 6px 16px !important;
+    gap: 12px !important;
+    bottom: 8px !important;
+  }
+  .nav-btn {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 0.95rem !important;
+  }
+  .slide-counter {
+    font-size: 0.8rem !important;
+  }
+  .toc-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2px !important;
+    font-size: 0.78rem !important;
+  }
+  .qa-grid {
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+  }
+  .workflow-steps {
+    gap: 6px !important;
+  }
+  .workflow-step {
+    padding: 8px !important;
+    font-size: 0.78rem !important;
+  }
+  .workflow-step .step-icon {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 1.1rem !important;
+  }
+  .credential-box {
+    padding: 14px !important;
+  }
+  .cover-title {
+    font-size: 1.4rem !important;
+  }
+  .cover-subtitle {
+    font-size: 0.9rem !important;
+  }
+  .service-table {
+    font-size: 0.72rem !important;
+  }
+  .service-table td, .service-table th {
+    padding: 3px 5px !important;
+  }
+  .slide-number-badge {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.75rem !important;
+  }
+  h3 {
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .slide {
+    padding: 14px 12px;
+    padding-bottom: 68px;
+  }
+  .phone-mockup {
+    width: 170px !important;
+    max-height: 340px !important;
+  }
+  .phone-mockup img {
+    max-height: 300px !important;
+  }
+  .dual-phone .phone-mockup {
+    width: 150px !important;
+    max-height: 280px !important;
+  }
+  .dual-phone .phone-mockup img {
+    max-height: 240px !important;
+  }
+  .slide-content {
+    font-size: 0.78rem !important;
+  }
+  .cover-title {
+    font-size: 1.2rem !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ==============================
+     Slides
+     ============================== -->
+<div class="slides-wrapper" id="slidesWrapper">
+
+<!-- ======== SLIDE 1: 表紙 ======== -->
+<div class="slide active" data-slide="1">
+  <div class="cover-bg"></div>
+  <div class="slide-content centered">
+    <div class="cover-heart">&#x2764;&#xFE0F;</div>
+    <h1 class="cover-title">ケアサービスアプリ<br>操作マニュアル</h1>
+    <div class="cover-divider"></div>
+    <p class="cover-subtitle">一般スタッフ向け</p>
+    <p class="cover-tagline">全ての人が幸せになれる世の中に</p>
+  </div>
+</div>
+
+<!-- ======== SLIDE 2: 目次 ======== -->
+<div class="slide" data-slide="2">
+  <div class="section-header">
+    <h2>目次</h2>
+    <div class="header-line"></div>
+  </div>
+  <div class="toc-grid" style="padding-bottom: 100px;">
+    <div class="toc-section">はじめに</div>
+    <div class="toc-item" onclick="goToSlide(3)"><span class="toc-num">3</span><span class="toc-label">アプリの開き方</span><span class="toc-page">3</span></div>
+    <div class="toc-item" onclick="goToSlide(4)"><span class="toc-num">4</span><span class="toc-label">Googleフォーム済みの方へ</span><span class="toc-page">4</span></div>
+    <div class="toc-section">入社手続き</div>
+    <div class="toc-item" onclick="goToSlide(5)"><span class="toc-num">5</span><span class="toc-label">入社手続きの流れ</span><span class="toc-page">5</span></div>
+    <div class="toc-item" onclick="goToSlide(6)"><span class="toc-num">6</span><span class="toc-label">入社手続き - 情報入力</span><span class="toc-page">6</span></div>
+    <div class="toc-item" onclick="goToSlide(7)"><span class="toc-num">7</span><span class="toc-label">入社手続き - 契約・登録</span><span class="toc-page">7</span></div>
+    <div class="toc-section">日常業務</div>
+    <div class="toc-item" onclick="goToSlide(8)"><span class="toc-num">8</span><span class="toc-label">ログイン方法</span><span class="toc-page">8</span></div>
+    <div class="toc-item" onclick="goToSlide(9)"><span class="toc-num">9</span><span class="toc-label">ホーム画面の説明</span><span class="toc-page">9</span></div>
+    <div class="toc-item" onclick="goToSlide(10)"><span class="toc-num">10</span><span class="toc-label">出発・到着ボタン</span><span class="toc-page">10</span></div>
+    <div class="toc-item" onclick="goToSlide(11)"><span class="toc-num">11</span><span class="toc-label">日誌報告の書き方</span><span class="toc-page">11</span></div>
+    <div class="toc-item" onclick="goToSlide(12)"><span class="toc-num">12</span><span class="toc-label">マイシフト</span><span class="toc-page">12</span></div>
+    <div class="toc-section">利用者情報</div>
+    <div class="toc-item" onclick="goToSlide(13)"><span class="toc-num">13</span><span class="toc-label">利用者一覧</span><span class="toc-page">13</span></div>
+    <div class="toc-item" onclick="goToSlide(14)"><span class="toc-num">14</span><span class="toc-label">基本情報・アセスメント</span><span class="toc-page">14</span></div>
+    <div class="toc-item" onclick="goToSlide(15)"><span class="toc-num">15</span><span class="toc-label">手順書・書類</span><span class="toc-page">15</span></div>
+    <div class="toc-section">その他・サポート</div>
+    <div class="toc-item" onclick="goToSlide(16)"><span class="toc-num">16</span><span class="toc-label">お知らせの確認</span><span class="toc-page">16</span></div>
+    <div class="toc-item" onclick="goToSlide(17)"><span class="toc-num">17</span><span class="toc-label">よくある質問 Q&amp;A</span><span class="toc-page">17</span></div>
+    <div class="toc-item" onclick="goToSlide(18)"><span class="toc-num">18</span><span class="toc-label">日々の業務フロー</span><span class="toc-page">18</span></div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 3: アプリの開き方 ======== -->
+<div class="slide" data-slide="3">
+  <div class="slide-content">
+    <div class="slide-text">
+      <div class="slide-number-badge">3</div>
+      <h2>アプリの開き方</h2>
+      <h3>ブラウザからアクセスする方法</h3>
+      <p>スマートフォンのブラウザ（Safari / Chrome）を開いて、<br>以下のURLにアクセスしてください。</p>
+      <div class="url-badge">https://shift-mobile-app.vercel.app</div>
+
+      <div class="two-col-text">
+        <div class="info-card">
+          <h4>&#x1F34E; iPhone の場合</h4>
+          <p>Safariで開く &#x2192; 共有ボタン（&#x25A1;&#x2191;）&#x2192;「ホーム画面に追加」をタップ</p>
+        </div>
+        <div class="info-card coral">
+          <h4>&#x1F4F1; Android の場合</h4>
+          <p>Chromeで開く &#x2192; メニュー（&#x22EE;）&#x2192;「ホーム画面に追加」をタップ</p>
+        </div>
+      </div>
+
+      <div class="tip-box">ホーム画面に追加すると、次回からワンタップで開けるようになります。</div>
+    </div>
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <img src="screenshots/onb_00_welcome.png" alt="ウェルカム画面">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 4: Googleフォーム済みの方へ ======== -->
+<div class="slide" data-slide="4">
+  <div class="badge" style="background: var(--coral);">お知らせ</div>
+  <h2 class="slide-title" style="margin-bottom: 16px;">Googleフォームで入社手続き済みの方へ</h2>
+  <div class="content-area" style="max-width: 700px;">
+    <div class="info-card" style="background: linear-gradient(135deg, #fff5f5, #fff0eb); border-left: 4px solid var(--coral); padding: 20px; margin-bottom: 20px;">
+      <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text-dark);">
+        <strong>2026年4月4日現在</strong>、既にGoogleフォームにて入社手続きをお済ませの方は、アプリでの入社手続きは不要です。
+      </p>
+    </div>
+    <div class="steps" style="margin-bottom: 16px;">
+      <p style="font-weight: bold; margin-bottom: 10px; color: var(--pink-dark);">ログインまでの流れ：</p>
+      <ol style="padding-left: 20px; line-height: 2;">
+        <li>こちらで<strong>社員ID</strong>と<strong>パスワード</strong>を発行いたします</li>
+        <li>ご登録いただいている<strong>Gmail</strong>宛にログイン情報をお送りします</li>
+        <li>届いた社員IDとパスワードでアプリにログインしてください</li>
+      </ol>
+    </div>
+    <div class="tip-box" style="background: #fff9f0; border: 1px solid #f0d8b8; border-radius: 12px; padding: 14px 18px;">
+      <p style="font-size: 0.9rem; color: var(--text-mid);">
+        ※ メールが届かない場合は、迷惑メールフォルダをご確認ください。<br>
+        ※ それでも届かない場合は管理者までご連絡ください。
+      </p>
+    </div>
+    <div style="margin-top: 20px; text-align: center;">
+      <button onclick="goToSlide(8)" style="background: linear-gradient(135deg, var(--pink), var(--coral)); color: white; border: none; padding: 14px 32px; border-radius: 30px; font-size: 1rem; font-weight: bold; font-family: inherit; cursor: pointer; box-shadow: 0 4px 16px rgba(230,165,165,0.4); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        既に登録済みの方は → 8ページ「ログイン方法」へ
+      </button>
+      <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 8px;">（入社手続きの説明をスキップします）</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 5: 入社手続きの流れ ======== -->
+<div class="slide" data-slide="5">
+  <div class="slide-content">
+    <div class="slide-text">
+      <div class="slide-number-badge">5</div>
+      <h2>入社手続きの流れ</h2>
+      <h3>4つのカードを順番に完了させます</h3>
+      <p>ログイン後に表示される入社手続きメニューから、以下の順番で手続きを進めます。</p>
+
+      <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 14px 0;">
+        <div style="background: linear-gradient(135deg, var(--pink), var(--coral)); color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;">1. 入社手続き</div>
+        <span style="color: var(--pink); font-size: 18px;">&#x2192;</span>
+        <div style="background: linear-gradient(135deg, var(--pink), var(--coral)); color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;">2. 労働条件通知書</div>
+        <span style="color: var(--pink); font-size: 18px;">&#x2192;</span>
+        <div style="background: linear-gradient(135deg, var(--pink), var(--coral)); color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;">3. 雇用契約書</div>
+        <span style="color: var(--pink); font-size: 18px;">&#x2192;</span>
+        <div style="background: linear-gradient(135deg, var(--pink), var(--coral)); color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;">4. 入社の手引き</div>
+        <span style="color: var(--pink); font-size: 18px;">&#x2192;</span>
+        <div style="background: #22C55E; color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;">アカウント登録</div>
+      </div>
+
+      <p>入社手続きでは、基本情報・資格・マイナンバー・職歴・配偶者・扶養親族・通勤経路・口座情報・確認事項の7ステップを入力します。</p>
+
+      <div class="tip-box">途中で中断しても、次回ログイン時に続きから再開できます。焦らず一つずつ進めましょう。</div>
+    </div>
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <img src="screenshots/onb_03_menu.png" alt="入社手続きメニュー">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 6: 入社手続き - 情報入力 ======== -->
+<div class="slide" data-slide="6">
+  <div class="slide-content">
+    <div class="slide-text compact">
+      <div class="slide-number-badge">6</div>
+      <h2>入社手続き - 情報入力</h2>
+      <h3>7ステップで個人情報を入力します</h3>
+
+      <ol class="steps">
+        <li><strong>労働条件通知書</strong> - 内容を確認して交付方法（電子/書面）を選択し「同意する」</li>
+        <li><strong>基本情報</strong> - 氏名・生年月日・住所・電話番号・メールアドレスを入力</li>
+        <li><strong>資格・マイナンバー</strong> - 保有資格にチェック、マイナンバーを入力</li>
+        <li><strong>職歴・雇用保険</strong> - 直近の職歴と雇用保険番号を入力</li>
+        <li><strong>配偶者・扶養親族</strong> - 配偶者の有無と扶養親族の情報を入力</li>
+        <li><strong>通勤・口座情報</strong> - 通勤手段と給与振込用の銀行口座を入力</li>
+        <li><strong>確認事項</strong> - 個人情報・就業規則・守秘義務などにチェック</li>
+      </ol>
+
+      <div class="tip-box">全ての項目が必須入力です。マイナンバーカードと口座情報をお手元にご用意ください。</div>
+    </div>
+    <div class="dual-phones">
+      <div>
+        <div class="phone-mockup phone-sm">
+          <div class="phone-screen">
+            <img src="screenshots/onb_labor.png" alt="労働条件通知書">
+          </div>
+        </div>
+        <p class="phone-label">労働条件通知書</p>
+      </div>
+      <div class="arrow-between">&#x279C;</div>
+      <div>
+        <div class="phone-mockup phone-sm">
+          <div class="phone-screen">
+            <img src="screenshots/onb_step1.png" alt="基本情報入力">
+          </div>
+        </div>
+        <p class="phone-label">基本情報入力</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 7: 入社手続き - 契約・登録 ======== -->
+<div class="slide" data-slide="7">
+  <div class="slide-content">
+    <div class="slide-text compact">
+      <div class="slide-number-badge">7</div>
+      <h2>入社手続き - 契約・登録</h2>
+      <h3>契約書の確認からアカウント登録まで</h3>
+
+      <ol class="steps">
+        <li><strong>雇用契約書</strong> - 契約内容を最後まで読み「同意する」をタップ</li>
+        <li><strong>入社の手引き</strong> - 会社概要・就業ルール・福利厚生・緊急時対応など6つのトピックを確認</li>
+        <li><strong>アカウント登録</strong> - スタッフIDが自動発行されるので、パスワード（8文字以上）を設定</li>
+      </ol>
+
+      <div class="important-note">スタッフIDは今後のログインに必要です。必ずメモを取り、大切に保管してください。IDを忘れた場合は管理者にお問い合わせが必要です。</div>
+
+    </div>
+    <div class="dual-phones">
+      <div>
+        <div class="phone-mockup phone-sm">
+          <div class="phone-screen">
+            <img src="screenshots/onb_contract.png" alt="雇用契約書">
+          </div>
+        </div>
+        <p class="phone-label">雇用契約書</p>
+      </div>
+      <div class="arrow-between">&#x279C;</div>
+      <div>
+        <div class="phone-mockup phone-sm">
+          <div class="phone-screen">
+            <img src="screenshots/onb_08_register.png" alt="アカウント登録">
+          </div>
+        </div>
+        <p class="phone-label">アカウント登録</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 8: ログイン方法 ======== -->
+<div class="slide" data-slide="8">
+  <div class="slide-content">
+    <div class="slide-text">
+      <div class="slide-number-badge">8</div>
+      <h2>ログイン方法</h2>
+      <h3>IDとパスワードを入力してログイン</h3>
+      <ol class="steps">
+        <li>アプリを開くとログイン画面が表示されます</li>
+        <li><strong>スタッフID</strong>を入力（入社手続き時に発行されたもの）</li>
+        <li><strong>パスワード</strong>を入力</li>
+        <li>「<strong>ログイン</strong>」ボタンをタップします</li>
+      </ol>
+
+      <div class="info-card">
+        <h4>パスワードを忘れた場合</h4>
+        <p>「パスワードをお忘れですか？」をタップ &#x2192; メールアドレスを入力して送信 &#x2192; 登録メールアドレスに社員IDとパスワードが届きます</p>
+      </div>
+      <div class="tip-box">IDとパスワードがわからない場合は、管理者にお問い合わせください。</div>
+    </div>
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <img src="screenshots/01_login.png" alt="ログイン画面">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 9: ホーム画面の説明 ======== -->
+<div class="slide" data-slide="9">
+  <div class="slide-content">
+    <div class="slide-text">
+      <div class="slide-number-badge">9</div>
+      <h2>ホーム画面の説明</h2>
+      <h3>ログイン後に最初に表示される画面です</h3>
+      <ul class="callout-list">
+        <li><strong>上部：ユーザー名</strong> - ログイン中のスタッフ名が表示されます</li>
+        <li><strong>今日のケア</strong> - 本日担当するケアがシフトカードとして並びます</li>
+        <li><strong>メニューカード</strong> - マイシフト・利用者一覧・お知らせなど各機能へのリンク</li>
+        <li><strong>下部ナビゲーション</strong> - 主要ページへワンタップで移動できます</li>
+      </ul>
+      <p>各シフトカードには<span class="btn-ref btn-blue">出発</span><span class="btn-ref btn-green">到着</span><span class="btn-ref btn-pink">日誌</span>ボタンが表示されます。</p>
+      <div class="tip-box">ホーム画面はアプリの「ダッシュボード」です。一日の業務はここから始まります。</div>
+    </div>
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <img src="screenshots/03_home.png" alt="ホーム画面">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 10: 出発・到着ボタン ======== -->
+<div class="slide" data-slide="10">
+  <div class="slide-content">
+    <div class="slide-text compact">
+      <div class="slide-number-badge">10</div>
+      <h2>シフトカードと出発・到着</h2>
+      <h3>ケアの前後にボタンをタップします</h3>
+      <ol class="steps">
+        <li>利用者宅に向かう直前に青色の<span class="btn-ref btn-blue">出発</span>ボタンをタップ &#x2192;「出発済」に変わります</li>
+        <li>利用者宅に到着したら緑色の<span class="btn-ref btn-green">到着</span>ボタンをタップ &#x2192;「到着済」に変わります</li>
+        <li>ケア完了後にピンク色の<span class="btn-ref btn-pink">日誌</span>ボタンをタップして日誌を記入します</li>
+      </ol>
+
+      <div class="info-card">
+        <h4>間違えて押した場合の取り消し</h4>
+        <p>「出発済」や「到着済」の表示を<strong>もう一度タップ</strong>すると、取り消し確認のダイアログが表示されます。「取り消す」を選べば元に戻せます。</p>
+      </div>
+
+      <div class="tip-box">出発・到着の記録は正確な移動時間の把握やケアの品質管理のために大切です。忘れずにタップをお願いします。</div>
+    </div>
+    <div class="dual-phones">
+      <div>
+        <div class="phone-mockup phone-sm">
+          <div class="phone-screen">
+            <img src="screenshots/05_departure_btn.png" alt="出発前">
+          </div>
+        </div>
+        <p class="phone-label">出発前</p>
+      </div>
+      <div class="arrow-between">&#x279C;</div>
+      <div>
+        <div class="phone-mockup phone-sm">
+          <div class="phone-screen">
+            <img src="screenshots/05b_departed.png" alt="出発後">
+          </div>
+        </div>
+        <p class="phone-label">出発後</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 11: 日誌報告の書き方 ======== -->
+<div class="slide" data-slide="11">
+  <div class="slide-content">
+    <div class="slide-text compact">
+      <div class="slide-number-badge">11</div>
+      <h2>日誌報告の書き方</h2>
+      <h3>ケア完了後に記入して提出します</h3>
+      <ol class="steps">
+        <li>シフトカードの<span class="btn-ref btn-pink">日誌</span>ボタンをタップして日誌画面を開く</li>
+        <li><strong>ケア時間</strong> - 実際のケア開始・終了時間を確認・修正</li>
+        <li><strong>体調・状態</strong> - 利用者の体調を選択（良好・普通・注意など）</li>
+        <li><strong>ケア内容</strong> - 実施したケアの項目にチェック</li>
+        <li><strong>利用者からの要望</strong>・<strong>日誌メモ</strong>・<strong>今後の対応</strong>を記入</li>
+        <li>全て入力したら「<strong>提出</strong>」ボタンをタップ</li>
+      </ol>
+
+      <div class="info-card">
+        <h4>提出後の修正</h4>
+        <p>管理者が承認する前であれば、同じシフトカードの日誌ボタンから<strong>再編集が可能</strong>です。承認後は管理者にご連絡ください。</p>
+      </div>
+      <div class="tip-box">「特になし」ではなく、利用者の様子を短くても記録に残しましょう。次のスタッフへの引き継ぎに役立ちます。</div>
+    </div>
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <img src="screenshots/14_journal.png" alt="日誌報告画面">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 12: マイシフト ======== -->
+<div class="slide" data-slide="12">
+  <div class="slide-content">
+    <div class="slide-text">
+      <div class="slide-number-badge">12</div>
+      <h2>マイシフト</h2>
+      <h3>月間のシフトを一覧で確認できます</h3>
+      <ul class="callout-list">
+        <li><strong>カレンダービュー</strong> - 月間のシフト予定がカレンダー形式で表示</li>
+        <li><strong>勤務統計</strong> - 当月の勤務日数・合計時間・ケア件数を表示</li>
+        <li><strong>前月・翌月</strong> - 矢印ボタン（&#x276E; &#x276F;）で切り替え</li>
+        <li><strong>日別表示</strong> - カレンダーの日付をタップするとその日のシフト一覧を表示</li>
+        <li><strong>日誌ステータス</strong> - 各シフトの日誌提出状況（未提出/提出済/承認済）がわかります</li>
+      </ul>
+      <div class="tip-box">翌月のシフトが公開されたらこの画面で確認できます。こまめにチェックしましょう。</div>
+    </div>
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <img src="screenshots/06_myshift.png" alt="マイシフト画面">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 13: 利用者一覧 ======== -->
+<div class="slide" data-slide="13">
+  <div class="slide-content">
+    <div class="slide-text">
+      <div class="slide-number-badge">13</div>
+      <h2>利用者一覧</h2>
+      <h3>担当する利用者の情報を検索・確認できます</h3>
+      <ul class="callout-list">
+        <li><strong>検索バー</strong> - 利用者名で検索できます</li>
+        <li><strong>担当タブ</strong> - 自分が担当する利用者のみ表示</li>
+        <li><strong>全利用者タブ</strong> - 全ての利用者を一覧表示</li>
+        <li>利用者をタップすると<strong>詳細情報ページ</strong>に移動します</li>
+      </ul>
+      <div class="tip-box">訪問前に必ず利用者情報を確認して、適切なケアを心がけましょう。</div>
+    </div>
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <img src="screenshots/07_userlist_all.png" alt="利用者一覧画面">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 14: 利用者詳細 - 基本情報・アセスメント ======== -->
+<div class="slide" data-slide="14">
+  <div class="slide-content">
+    <div class="slide-text compact">
+      <div class="slide-number-badge">14</div>
+      <h2>利用者詳細 - 基本情報・アセスメント</h2>
+      <h3>利用者の詳細画面には4つのタブがあります</h3>
+
+      <div class="tab-bar">
+        <span class="tab-item active-tab">基本情報</span>
+        <span class="tab-item active-tab">アセスメント</span>
+        <span class="tab-item">手順書</span>
+        <span class="tab-item">書類</span>
+      </div>
+
+      <div class="two-col-text" style="margin-top: 8px;">
+        <div class="info-card">
+          <h4>基本情報タブ</h4>
+          <p>氏名・年齢・住所・緊急連絡先・介護度・障害区分・特記事項を確認できます</p>
+        </div>
+        <div class="info-card coral">
+          <h4>アセスメントタブ</h4>
+          <p>身体状況・生活状況・医療情報（既往歴・服薬）・コミュニケーション方法を確認できます</p>
+        </div>
+      </div>
+
+      <div class="tip-box">緊急連絡先の電話番号をタップすると、そのまま電話をかけられます。アセスメント情報は定期的に更新されます。</div>
+    </div>
+    <div class="dual-phones">
+      <div>
+        <div class="phone-mockup phone-sm">
+          <div class="phone-screen">
+            <img src="screenshots/08_nakatani_detail.png" alt="中谷玲子様 基本情報タブ">
+          </div>
+        </div>
+        <p class="phone-label">基本情報</p>
+      </div>
+      <div class="arrow-between">&#x279C;</div>
+      <div>
+        <div class="phone-mockup phone-sm">
+          <div class="phone-screen">
+            <img src="screenshots/09_nakatani_assessment.png" alt="中谷玲子様 アセスメントタブ">
+          </div>
+        </div>
+        <p class="phone-label">アセスメント</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 15: 利用者詳細 - 手順書・書類 ======== -->
+<div class="slide" data-slide="15">
+  <div class="slide-content">
+    <div class="slide-text compact">
+      <div class="slide-number-badge">15</div>
+      <h2>利用者詳細 - 手順書・書類</h2>
+      <h3>ケア手順と関連書類を確認できます</h3>
+
+      <div class="tab-bar">
+        <span class="tab-item">基本情報</span>
+        <span class="tab-item">アセスメント</span>
+        <span class="tab-item active-tab">手順書</span>
+        <span class="tab-item active-tab">書類</span>
+      </div>
+
+      <div class="two-col-text" style="margin-top: 8px;">
+        <div>
+          <h4 style="font-size: 16px; color: var(--text-dark); margin-bottom: 8px;">手順書タブ</h4>
+          <p style="font-size: 14px; color: var(--text-mid); line-height: 1.65;">サービス種別ごとのケア手順が記載。ステータスバッジで状態がわかります：</p>
+          <div style="margin: 8px 0;">
+            <span class="status-badge status-approved">承認済</span> 最新の手順書<br>
+            <span class="status-badge status-pending" style="margin-top: 4px;">申請中</span> 承認待ち<br>
+            <span class="status-badge status-returned" style="margin-top: 4px;">差戻し</span> 修正が必要
+          </div>
+        </div>
+        <div>
+          <h4 style="font-size: 16px; color: var(--text-dark); margin-bottom: 8px;">書類タブ</h4>
+          <ul class="callout-list" style="margin-top: 0;">
+            <li><strong>受給者証</strong> - 障害福祉サービス受給者証</li>
+            <li><strong>計画書</strong> - サービス等利用計画書</li>
+            <li><strong>契約書類</strong> - 利用契約に関する書類</li>
+            <li><strong>その他</strong> - 医師の指示書など</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="important-note">手順書と異なるケアを行う場合は、必ず管理者に事前確認してください。</div>
+    </div>
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <img src="screenshots/10_nakatani_procedure.png" alt="中谷玲子様 手順書タブ">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 16: お知らせの確認 ======== -->
+<div class="slide" data-slide="16">
+  <div class="slide-content">
+    <div class="slide-text">
+      <div class="slide-number-badge">16</div>
+      <h2>お知らせの確認</h2>
+      <h3>管理者からの連絡やシステム通知</h3>
+      <ul class="callout-list">
+        <li><strong>未読バッジ</strong> - 未読の通知がある場合、赤い数字バッジが表示されます</li>
+        <li><strong>通知一覧</strong> - 日時の新しい順に並んでいます</li>
+        <li><strong>未読 / 既読</strong> - 未読の通知は背景色が濃く表示されます</li>
+        <li><strong>通知タイプ</strong> - シフト変更、お知らせ、緊急連絡などに分類</li>
+        <li>タップすると通知の詳細が表示されます</li>
+      </ul>
+      <div class="tip-box">出勤時と退勤時に必ずお知らせを確認する習慣をつけましょう。特にシフト変更の通知は見逃し厳禁です。</div>
+    </div>
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <img src="screenshots/12_notifications.png" alt="お知らせ画面">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 17: よくある質問 Q&A ======== -->
+<div class="slide" data-slide="17">
+  <div class="slide-content centered">
+    <div class="section-header">
+      <div class="slide-number-badge">17</div>
+      <h2>よくある質問 Q&A</h2>
+      <div class="header-line"></div>
+    </div>
+    <div class="qa-grid">
+      <div class="qa-card">
+        <div class="q">Q. ログインできません</div>
+        <div class="a">IDまたはパスワードの大文字・小文字に注意して再入力してください。解決しない場合は管理者にご連絡ください。</div>
+      </div>
+      <div class="qa-card">
+        <div class="q">Q. シフトが表示されません</div>
+        <div class="a">マイシフト画面でカレンダーの月を確認してください。登録されていない場合は管理者にご確認ください。</div>
+      </div>
+      <div class="qa-card">
+        <div class="q">Q. 出発ボタンを誤って押しました</div>
+        <div class="a">「出発済」をもう一度タップすると取り消し確認が表示されます。「取り消す」を選べば元に戻せます。</div>
+      </div>
+      <div class="qa-card">
+        <div class="q">Q. 出発ボタンを押し忘れました</div>
+        <div class="a">気づいた時点で押してください。正確な時刻との差異は日誌のメモ欄に補足を記入してください。</div>
+      </div>
+      <div class="qa-card">
+        <div class="q">Q. 日誌を提出後に修正したい</div>
+        <div class="a">管理者が承認する前であれば、同じシフトカードの日誌ボタンから再編集が可能です。承認後は管理者にご連絡ください。</div>
+      </div>
+      <div class="qa-card">
+        <div class="q">Q. 利用者の情報が古いようです</div>
+        <div class="a">利用者情報は管理者が更新します。最新でない情報に気づいた場合は管理者にお知らせください。</div>
+      </div>
+      <div class="qa-card">
+        <div class="q">Q. 画面が正しく表示されません</div>
+        <div class="a">ブラウザのキャッシュをクリアして再読み込みしてください。改善しない場合はブラウザを再起動してください。</div>
+      </div>
+      <div class="qa-card">
+        <div class="q">Q. アプリの動作が遅いです</div>
+        <div class="a">Wi-Fiまたは4G/5Gの電波状況が良い場所でご利用ください。改善しない場合はブラウザを再起動してください。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 18: 日々の業務フロー ======== -->
+<div class="slide" data-slide="18">
+  <div class="slide-content centered" style="padding-bottom: 100px;">
+    <div class="section-header" style="margin-bottom: 10px;">
+      <div class="slide-number-badge">18</div>
+      <h2 style="font-size: 28px;">日々の業務フロー</h2>
+      <p class="section-sub" style="font-size: 14px;">毎日の基本的な流れを確認しましょう</p>
+      <div class="header-line"></div>
+    </div>
+    <div class="workflow" style="gap: 6px;">
+      <div class="workflow-step">
+        <div class="workflow-icon">&#x1F4F1;</div>
+        <div class="workflow-text">
+          <div class="wf-title">1. アプリを開いてログイン</div>
+          <div class="wf-desc">出勤前にアプリを開き、今日のシフトとお知らせを確認します</div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-icon">&#x1F4CB;</div>
+        <div class="workflow-text">
+          <div class="wf-title">2. 利用者情報を事前確認</div>
+          <div class="wf-desc">訪問先の利用者詳細・手順書を確認します</div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-icon">&#x1F699;</div>
+        <div class="workflow-text">
+          <div class="wf-title">3. 出発ボタンをタップ</div>
+          <div class="wf-desc">利用者宅に向かう直前に出発ボタンを押します</div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-icon">&#x1F3E0;</div>
+        <div class="workflow-text">
+          <div class="wf-title">4. 到着ボタンをタップ</div>
+          <div class="wf-desc">利用者宅に到着したら到着ボタンを押します</div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-icon">&#x1F91D;</div>
+        <div class="workflow-text">
+          <div class="wf-title">5. ケアを実施</div>
+          <div class="wf-desc">手順書に沿って丁寧にケアを行います</div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-icon">&#x1F4DD;</div>
+        <div class="workflow-text">
+          <div class="wf-title">6. 日誌報告を記入・提出</div>
+          <div class="wf-desc">ケア完了後、日誌を記入して提出します</div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-icon">&#x2705;</div>
+        <div class="workflow-text">
+          <div class="wf-title">7. 次のケアへ / 業務終了</div>
+          <div class="wf-desc">次のシフトがあればステップ3に戻り、全て終わったらログアウト</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 19: 裏表紙 ======== -->
+<div class="slide" data-slide="19">
+  <div class="back-cover-bg"></div>
+  <div class="slide-content centered">
+    <div class="cover-heart">&#x2764;&#xFE0F;</div>
+    <h2 style="font-size: 30px; color: var(--pink-dark); font-weight: 700; letter-spacing: 1px; line-height: 1.5;">全ての人が幸せになれる世の中に</h2>
+    <div class="cover-divider"></div>
+    <p class="back-logo">Alhena 合同会社</p>
+    <p class="back-app">ケアサービスアプリ 操作マニュアル</p>
+
+    <p style="margin-top: 20px; font-size: 14px; color: var(--text-light);">お問い合わせは管理者または事務所までお願いいたします</p>
+  </div>
+</div>
+
+</div><!-- /slides-wrapper -->
+
+<!-- Navigation Controls -->
+<div class="nav-controls">
+  <button class="nav-btn" id="prevBtn" aria-label="前のスライド">&#x276E;</button>
+  <span class="slide-counter" id="slideCounter">1 / 19</span>
+  <button class="nav-btn" id="nextBtn" aria-label="次のスライド">&#x276F;</button>
+</div>
+
+<!-- ==============================
+     JavaScript
+     ============================== -->
+<script>
+(function() {
+  'use strict';
+
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  let currentSlide = 1;
+  let isTransitioning = false;
+
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const slideCounter = document.getElementById('slideCounter');
+  const progressBar = document.getElementById('progressBar');
+
+  function updateSlide(newSlide) {
+    if (newSlide < 1 || newSlide > totalSlides || isTransitioning) return;
+    isTransitioning = true;
+
+    // Remove active from current
+    slides[currentSlide - 1].classList.remove('active');
+
+    // Set new slide
+    currentSlide = newSlide;
+    slides[currentSlide - 1].classList.add('active');
+
+    // Update counter
+    slideCounter.textContent = currentSlide + ' / ' + totalSlides;
+
+    // Update progress bar
+    var progress = ((currentSlide - 1) / (totalSlides - 1)) * 100;
+    progressBar.style.width = progress + '%';
+
+    // Update buttons
+    prevBtn.disabled = currentSlide === 1;
+    nextBtn.disabled = currentSlide === totalSlides;
+
+    setTimeout(function() {
+      isTransitioning = false;
+    }, 500);
+  }
+
+  function goNext() {
+    updateSlide(currentSlide + 1);
+  }
+
+  function goPrev() {
+    updateSlide(currentSlide - 1);
+  }
+
+  // Expose goToSlide globally for TOC clicks
+  window.goToSlide = function(n) {
+    updateSlide(n);
+  };
+
+  // Button clicks
+  nextBtn.addEventListener('click', goNext);
+  prevBtn.addEventListener('click', goPrev);
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      goNext();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      goPrev();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      updateSlide(1);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      updateSlide(totalSlides);
+    }
+  });
+
+  // Touch swipe support
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var touchEndX = 0;
+  var touchEndY = 0;
+
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    touchEndY = e.changedTouches[0].screenY;
+    handleSwipe();
+  }, { passive: true });
+
+  function handleSwipe() {
+    var diffX = touchStartX - touchEndX;
+    var diffY = touchStartY - touchEndY;
+    var minSwipeDistance = 50;
+
+    // Only process horizontal swipes that are more horizontal than vertical
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > minSwipeDistance) {
+      if (diffX > 0) {
+        goNext(); // Swipe left = next
+      } else {
+        goPrev(); // Swipe right = previous
+      }
+    }
+  }
+
+  // Initialize
+  prevBtn.disabled = true;
+  progressBar.style.width = '0%';
+
+})();
+</script>
+</body>
+</html>
