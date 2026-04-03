@@ -1005,7 +1005,9 @@ html, body {
 .slide-text.compact .steps li { font-size: 15px; margin-bottom: 12px; }
 .slide-text.compact .callout-list li { font-size: 14px; margin-bottom: 8px; }
 
-/* Responsive adjustments */
+/* ==============================
+   Responsive: Tablet (max-width: 900px)
+   ============================== */
 @media (max-width: 900px) {
   .slide {
     padding: 30px 24px;
@@ -1038,116 +1040,216 @@ html, body {
   }
 }
 
+/* ==============================
+   Responsive: Mobile (max-width: 768px)
+   Comprehensive fix for all mobile display issues
+   ============================== */
 @media (max-width: 768px) {
+
+  /* --- A. Allow scrolling within slides on mobile --- */
   .slide {
-    padding: 20px 16px;
-    padding-bottom: 72px;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px 16px 90px 16px !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
   }
-  .slide-title {
-    font-size: 1.2rem !important;
-  }
-  .section-title, h2 {
-    font-size: 1.05rem !important;
-  }
-  /* Single phone mockup: large and centered */
-  .phone-mockup {
-    width: 200px !important;
-    max-height: 400px !important;
-  }
-  .phone-mockup img {
-    max-height: 360px !important;
-  }
-  /* Dual phone: stack vertically, hide second phone, show only first larger */
-  .dual-phone {
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 8px !important;
-  }
-  .dual-phone .phone-mockup {
-    width: 180px !important;
-    max-height: 340px !important;
-  }
-  .dual-phone .phone-mockup img {
-    max-height: 300px !important;
-  }
-  /* slide-content: stack vertically on mobile */
+
+  /* --- B. Fix slide-content layout (text + image stacking) --- */
   .slide-content {
     flex-direction: column !important;
     align-items: center !important;
-    gap: 12px !important;
-    font-size: 0.82rem !important;
-    overflow-y: auto !important;
-    max-height: calc(100vh - 100px) !important;
+    gap: 16px !important;
+    width: 100% !important;
   }
   .slide-content .slide-text {
-    max-width: 100% !important;
     width: 100% !important;
+    max-width: 100% !important;
+    order: 1 !important;
   }
   .slide-content .slide-image {
-    max-width: 100% !important;
     width: 100% !important;
+    max-width: 100% !important;
     display: flex !important;
     justify-content: center !important;
+    order: 2 !important;
   }
-  .content-area {
-    font-size: 0.82rem !important;
-    overflow-y: auto !important;
-    max-height: calc(100vh - 120px) !important;
+
+  /* --- C. Fix phone mockup sizes --- */
+  .phone-mockup {
+    width: 180px !important;
+    max-width: 50vw !important;
+    height: auto !important;
+    max-height: none !important;
+    min-width: unset !important;
+    margin: 0 auto !important;
   }
-  .callout-list li, .steps li, ul li, ol li {
-    font-size: 0.8rem !important;
-    margin-bottom: 3px !important;
+  .phone-mockup img {
+    max-height: none !important;
+    height: auto !important;
+    width: 100% !important;
   }
-  .tip-box, .info-card, .important-note {
-    padding: 8px 12px !important;
-    font-size: 0.78rem !important;
+  .phone-mockup.phone-sm {
+    width: 160px !important;
+    min-width: unset !important;
+    height: auto !important;
   }
-  .badge {
-    font-size: 0.7rem !important;
-    padding: 2px 8px !important;
+  /* Dual phones: side by side, smaller */
+  .dual-phones {
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
   }
-  .nav-controls {
-    padding: 6px 16px !important;
-    gap: 12px !important;
-    bottom: 8px !important;
+  .dual-phones .phone-mockup,
+  .dual-phones .phone-mockup.phone-sm {
+    width: 42vw !important;
+    max-width: 160px !important;
+    height: auto !important;
   }
-  .nav-btn {
-    width: 34px !important;
-    height: 34px !important;
+  .arrow-between {
+    font-size: 20px !important;
+    padding-top: 80px !important;
+  }
+
+  /* --- D. Fix typography for readability --- */
+  h2, .slide-title {
+    font-size: 1.15rem !important;
+    margin-bottom: 8px !important;
+  }
+  h3 {
     font-size: 0.95rem !important;
   }
-  .slide-counter {
-    font-size: 0.8rem !important;
+  p, li, .content-area, .slide-content {
+    font-size: 0.85rem !important;
+    line-height: 1.6 !important;
   }
+  .slide-number-badge {
+    width: 24px !important;
+    height: 24px !important;
+    line-height: 24px !important;
+    font-size: 0.7rem !important;
+    flex-shrink: 0 !important;
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 6px !important;
+  }
+  .tip-box, .info-card, .important-note {
+    padding: 10px 12px !important;
+    font-size: 0.82rem !important;
+  }
+  .badge {
+    font-size: 0.65rem !important;
+    padding: 2px 6px !important;
+  }
+  .callout-list li, .steps li, ul li, ol li {
+    font-size: 0.82rem !important;
+    margin-bottom: 4px !important;
+  }
+  .steps li {
+    padding-left: 36px !important;
+  }
+  .steps li::before {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 12px !important;
+  }
+
+  /* --- E. Fix TOC to be scrollable --- */
   .toc-grid {
     grid-template-columns: 1fr !important;
-    gap: 2px !important;
+    gap: 1px !important;
     font-size: 0.78rem !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .toc-section {
+    font-size: 0.72rem !important;
+    padding: 4px 0 !important;
+  }
+  .toc-item {
+    padding: 4px 8px !important;
+  }
+
+  /* --- F. Fix navigation bar not overlapping content --- */
+  .nav-controls {
+    padding: 6px 14px !important;
+    gap: 10px !important;
+    bottom: 6px !important;
+    border-radius: 30px !important;
+  }
+  .nav-btn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.9rem !important;
+  }
+  .slide-counter {
+    font-size: 0.75rem !important;
+    min-width: 50px !important;
+  }
+
+  /* --- G. Fix cover slide --- */
+  .cover-title {
+    font-size: 1.3rem !important;
+  }
+  .cover-subtitle {
+    font-size: 0.85rem !important;
+  }
+  .cover-heart {
+    font-size: 36px !important;
+  }
+  .cover-tagline {
+    font-size: 0.8rem !important;
+  }
+
+  /* --- H. Fix workflow steps and QA grid --- */
+  .workflow-steps, .workflow {
+    gap: 6px !important;
+  }
+  .workflow-step {
+    padding: 8px 10px !important;
+    font-size: 0.8rem !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  .workflow-step .step-icon,
+  .workflow-icon {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    font-size: 1rem !important;
   }
   .qa-grid {
     grid-template-columns: 1fr !important;
     gap: 6px !important;
   }
-  .workflow-steps {
-    gap: 6px !important;
+  .qa-card {
+    padding: 10px !important;
   }
-  .workflow-step {
-    padding: 8px !important;
-    font-size: 0.78rem !important;
+  .qa-card .q {
+    font-size: 0.8rem !important;
   }
-  .workflow-step .step-icon {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 1.1rem !important;
+  .qa-card .a {
+    font-size: 0.75rem !important;
+    padding-left: 16px !important;
+  }
+
+  /* --- Additional mobile fixes --- */
+  .two-col-text {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
   }
   .credential-box {
     padding: 14px !important;
   }
-  .cover-title {
-    font-size: 1.4rem !important;
+  .credential-box .cred-value {
+    font-size: 24px !important;
   }
-  .cover-subtitle {
-    font-size: 0.9rem !important;
+  .credential-box .cred-value.smaller {
+    font-size: 20px !important;
   }
   .service-table {
     font-size: 0.72rem !important;
@@ -1155,40 +1257,90 @@ html, body {
   .service-table td, .service-table th {
     padding: 3px 5px !important;
   }
-  .slide-number-badge {
-    width: 28px !important;
-    height: 28px !important;
+  .url-badge {
     font-size: 0.75rem !important;
+    padding: 6px 10px !important;
+    word-break: break-all !important;
   }
-  h3 {
-    font-size: 0.9rem !important;
+  .section-header h2 {
+    font-size: 1.15rem !important;
+  }
+  .section-header .section-sub {
+    font-size: 0.78rem !important;
+  }
+  .section-divider-num {
+    font-size: 48px !important;
+  }
+  .section-divider-title {
+    font-size: 1.3rem !important;
+  }
+  .section-divider-sub {
+    font-size: 0.85rem !important;
+  }
+  .tab-bar {
+    flex-wrap: wrap !important;
+    gap: 2px !important;
+  }
+  .tab-item {
+    font-size: 0.7rem !important;
+    padding: 5px 10px !important;
+  }
+  .contact-cards {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .contact-card {
+    padding: 16px !important;
+    min-width: unset !important;
+  }
+  .phone-label {
+    font-size: 0.7rem !important;
+    margin-top: 4px !important;
+  }
+  .progress-overview {
+    gap: 6px !important;
+  }
+  .progress-step-card {
+    min-width: 70px !important;
+    padding: 8px 10px !important;
+  }
+  .progress-step-card .psc-label {
+    font-size: 0.65rem !important;
+  }
+  .btn-ref {
+    font-size: 0.7rem !important;
+    padding: 2px 8px !important;
   }
 }
 
-@media (max-width: 430px) {
+/* ==============================
+   Responsive: Extra small screens (iPhone SE etc.)
+   ============================== */
+@media (max-width: 375px) {
   .slide {
-    padding: 14px 12px;
-    padding-bottom: 68px;
+    padding: 12px 10px 84px 10px !important;
+  }
+  h2, .slide-title {
+    font-size: 1.05rem !important;
+  }
+  p, li {
+    font-size: 0.8rem !important;
   }
   .phone-mockup {
-    width: 170px !important;
-    max-height: 340px !important;
-  }
-  .phone-mockup img {
-    max-height: 300px !important;
-  }
-  .dual-phone .phone-mockup {
     width: 150px !important;
-    max-height: 280px !important;
   }
-  .dual-phone .phone-mockup img {
-    max-height: 240px !important;
-  }
-  .slide-content {
-    font-size: 0.78rem !important;
+  .dual-phones .phone-mockup,
+  .dual-phones .phone-mockup.phone-sm {
+    width: 38vw !important;
   }
   .cover-title {
-    font-size: 1.2rem !important;
+    font-size: 1.1rem !important;
+  }
+  .workflow-step {
+    padding: 6px 8px !important;
+  }
+  .qa-card {
+    padding: 8px !important;
   }
 }
 </style>
