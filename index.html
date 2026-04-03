@@ -1392,9 +1392,10 @@ html, body {
     <div class="toc-item" onclick="goToSlide(14)"><span class="toc-num">14</span><span class="toc-label">基本情報・アセスメント</span><span class="toc-page">14</span></div>
     <div class="toc-item" onclick="goToSlide(15)"><span class="toc-num">15</span><span class="toc-label">手順書・書類</span><span class="toc-page">15</span></div>
     <div class="toc-section">その他・サポート</div>
-    <div class="toc-item" onclick="goToSlide(16)"><span class="toc-num">16</span><span class="toc-label">お知らせの確認</span><span class="toc-page">16</span></div>
-    <div class="toc-item" onclick="goToSlide(17)"><span class="toc-num">17</span><span class="toc-label">よくある質問 Q&amp;A</span><span class="toc-page">17</span></div>
-    <div class="toc-item" onclick="goToSlide(18)"><span class="toc-num">18</span><span class="toc-label">日々の業務フロー</span><span class="toc-page">18</span></div>
+    <div class="toc-item" onclick="goToSlide(16)"><span class="toc-num">16</span><span class="toc-label">手順書の差し戻し・承認</span><span class="toc-page">16</span></div>
+    <div class="toc-item" onclick="goToSlide(17)"><span class="toc-num">17</span><span class="toc-label">お知らせの確認</span><span class="toc-page">17</span></div>
+    <div class="toc-item" onclick="goToSlide(18)"><span class="toc-num">18</span><span class="toc-label">よくある質問 Q&amp;A</span><span class="toc-page">18</span></div>
+    <div class="toc-item" onclick="goToSlide(19)"><span class="toc-num">19</span><span class="toc-label">日々の業務フロー</span><span class="toc-page">19</span></div>
   </div>
 </div>
 
@@ -1843,11 +1844,48 @@ html, body {
   </div>
 </div>
 
-<!-- ======== SLIDE 16: お知らせの確認 ======== -->
+<!-- ======== SLIDE 16: 手順書の差し戻しと承認制 ======== -->
 <div class="slide" data-slide="16">
   <div class="slide-content">
     <div class="slide-text">
       <div class="slide-number-badge">16</div>
+      <h2>手順書の差し戻し・承認の仕組み</h2>
+      <h3>手順書はサービス提供責任者（サ責）の承認制です</h3>
+
+      <div class="info-card" style="background: linear-gradient(135deg, #fff5f5, #fff0eb); border-left: 4px solid #e57373; padding: 14px; margin-bottom: 12px;">
+        <p style="font-weight: bold; color: #c62828; margin-bottom: 6px;">手順書のステータスと意味</p>
+        <ul style="padding-left: 18px; line-height: 1.8; font-size: 0.9rem;">
+          <li><span style="background: #4caf50; color: white; padding: 1px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: bold;">承認済</span> 確定済み。この内容に従ってケアを行います</li>
+          <li><span style="background: #ff9800; color: white; padding: 1px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: bold;">承認待ち</span> サ責が確認中。まだケアには使用しないでください</li>
+          <li><span style="background: #f44336; color: white; padding: 1px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: bold;">差し戻し</span> 修正が必要。赤字で差し戻し理由が表示されます</li>
+        </ul>
+      </div>
+
+      <p style="font-weight: bold; color: var(--pink-dark); margin-bottom: 6px;">差し戻し時に確認すべきこと：</p>
+      <ol style="padding-left: 20px; line-height: 1.9; font-size: 0.88rem;">
+        <li>差し戻し理由を確認する<br><span style="color: var(--text-light); font-size: 0.82rem;">例：「差し戻し理由: 入浴介助の手順が不足しています」</span></li>
+        <li>「承認済」の手順書が別にあれば、そちらに従ってケアを行う</li>
+        <li>承認済みの手順書がない場合や不明点がある場合は<strong>サ責に確認</strong></li>
+      </ol>
+
+      <div class="tip-box" style="margin-top: 12px;">
+        <p style="font-size: 0.85rem;">※ 手順書の修正・再申請はサ責が行います。一般スタッフが編集する必要はありません。<br>
+        ※ 修正後に再度「承認済」になったら、新しい内容でケアを実施してください。</p>
+      </div>
+    </div>
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <img src="screenshots/10_nakatani_procedure.png" alt="手順書一覧（差し戻しバッジ）">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SLIDE 17: お知らせの確認 ======== -->
+<div class="slide" data-slide="17">
+  <div class="slide-content">
+    <div class="slide-text">
+      <div class="slide-number-badge">17</div>
       <h2>お知らせの確認</h2>
       <h3>管理者からの連絡やシステム通知</h3>
       <ul class="callout-list">
@@ -1867,11 +1905,11 @@ html, body {
   </div>
 </div>
 
-<!-- ======== SLIDE 17: よくある質問 Q&A ======== -->
-<div class="slide" data-slide="17">
+<!-- ======== SLIDE 18: よくある質問 Q&A ======== -->
+<div class="slide" data-slide="18">
   <div class="slide-content centered">
     <div class="section-header">
-      <div class="slide-number-badge">17</div>
+      <div class="slide-number-badge">18</div>
       <h2>よくある質問 Q&A</h2>
       <div class="header-line"></div>
     </div>
@@ -1912,11 +1950,11 @@ html, body {
   </div>
 </div>
 
-<!-- ======== SLIDE 18: 日々の業務フロー ======== -->
-<div class="slide" data-slide="18">
+<!-- ======== SLIDE 19: 日々の業務フロー ======== -->
+<div class="slide" data-slide="19">
   <div class="slide-content centered" style="padding-bottom: 100px;">
     <div class="section-header" style="margin-bottom: 10px;">
-      <div class="slide-number-badge">18</div>
+      <div class="slide-number-badge">19</div>
       <h2 style="font-size: 28px;">日々の業務フロー</h2>
       <p class="section-sub" style="font-size: 14px;">毎日の基本的な流れを確認しましょう</p>
       <div class="header-line"></div>
@@ -1975,8 +2013,8 @@ html, body {
   </div>
 </div>
 
-<!-- ======== SLIDE 19: 裏表紙 ======== -->
-<div class="slide" data-slide="19">
+<!-- ======== SLIDE 20: 裏表紙 ======== -->
+<div class="slide" data-slide="20">
   <div class="back-cover-bg"></div>
   <div class="slide-content centered">
     <div class="cover-heart">&#x2764;&#xFE0F;</div>
@@ -1994,7 +2032,7 @@ html, body {
 <!-- Navigation Controls -->
 <div class="nav-controls">
   <button class="nav-btn" id="prevBtn" aria-label="前のスライド">&#x276E;</button>
-  <span class="slide-counter" id="slideCounter">1 / 19</span>
+  <span class="slide-counter" id="slideCounter">1 / 20</span>
   <button class="nav-btn" id="nextBtn" aria-label="次のスライド">&#x276F;</button>
 </div>
 
